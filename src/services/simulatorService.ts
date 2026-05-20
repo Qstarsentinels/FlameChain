@@ -15,15 +15,19 @@ class FlamechainSimulator {
     jitter: 0,
     yieldCurve: [],
     quantumProfile: [
-      { label: 'Protein Qubits', value: '1.2e12', unit: 'EXP', trend: 5.4 },
-      { label: 'Neural Tethers', value: '880', unit: 'mV', trend: 2.1 },
-      { label: 'Dyson H-Flux', value: '0.94', unit: 'FHE', trend: 0.1 }
+      { label: 'Sovereign LLM', value: '1.58B', unit: 'TERN', trend: 0.8 },
+      { label: 'FlameGPT Core', value: 'V1.0', unit: 'LOGIC', trend: 1.2 },
+      { label: 'TFHE Torus', value: '0.94', unit: 'SEC', trend: 0.0 },
+      { label: 'Dillithium Root', value: '0xA7...2F', unit: 'ADR', trend: 0.0 }
     ],
     agents: [
       { name: 'Architect', role: 'State Expander', status: 'IDLE' },
       { name: 'Oracle', role: 'Entropy Verifier', status: 'IDLE' },
       { name: 'Flamebot', role: 'Sentinel Consensus', status: 'IDLE' }
-    ]
+    ],
+    architectBalance: 1240.58,
+    blockHeight: 7292,
+    walletAddress: undefined
   };
 
   constructor() {
@@ -111,12 +115,56 @@ class FlamechainSimulator {
         timestamp: Date.now(),
         data: shardData
       };
+
+      // Start Consensus Phase
+      this.runConsensusPhase();
       
       this.notify();
     }, 10000);
 
     // Simulate Peer Discovery
     this.startScanning();
+  }
+
+  private runConsensusPhase() {
+    // 1. Reset Agents
+    this.telemetry.agents.forEach(a => {
+      a.status = 'VOTING';
+      a.vote = undefined;
+    });
+    this.notify();
+
+    // 2. Simulate Voting Sequence
+    setTimeout(() => {
+      this.telemetry.agents[0].vote = 1;
+      this.telemetry.agents[0].status = 'COMMITTED';
+      this.notify();
+    }, 1500);
+
+    setTimeout(() => {
+      this.telemetry.agents[1].vote = 1;
+      this.telemetry.agents[1].status = 'COMMITTED';
+      this.notify();
+    }, 3000);
+
+    setTimeout(() => {
+      this.telemetry.agents[2].vote = 1;
+      this.telemetry.agents[2].status = 'COMMITTED';
+      
+      // 3. Commit Block & Distribute Yield
+      this.telemetry.blockHeight++;
+      const currentYield = this.telemetry.yieldCurve[0]?.yield || 10;
+      const architectTax = currentYield * 0.10;
+      this.telemetry.architectBalance += architectTax;
+      
+      this.notify();
+      
+      // Reset after brief delay
+      setTimeout(() => {
+        this.telemetry.agents.forEach(a => a.status = 'IDLE');
+        this.notify();
+      }, 2000);
+    }, 4500);
   }
 
   private startScanning() {
@@ -165,22 +213,6 @@ class FlamechainSimulator {
     }
   }
 
-  private triggerConsensusEvent() {
-    const scores: (-1 | 0 | 1)[] = [1, 1, 1, 0, -1];
-    const score = scores[Math.floor(Math.random() * scores.length)];
-    const statusMap = { '1': 'VALID', '0': 'PRUNED', '-1': 'REJECTED' } as const;
-
-    this.events.unshift({
-      id: Math.random().toString(36).substring(2, 10),
-      timestamp: Date.now(),
-      shardHash: Array.from({ length: 64 }, () => Math.floor(Math.random() * 16).toString(16)).join(''),
-      score,
-      status: statusMap[score.toString() as keyof typeof statusMap],
-    });
-
-    if (this.events.length > 50) this.events.pop();
-  }
-
   subscribe(listener: () => void) {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
@@ -198,6 +230,25 @@ class FlamechainSimulator {
       lastShard: this.lastShard ? { ...this.lastShard } : undefined,
       isScanning: this.isScanning,
     };
+  }
+
+  async connectWallet() {
+    // @ts-ignore
+    if (typeof window.ethereum !== 'undefined') {
+      try {
+        // @ts-ignore
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        this.telemetry.walletAddress = accounts[0];
+        this.notify();
+      } catch (error) {
+        console.error("User rejected wallet connection", error);
+      }
+    } else {
+      console.warn("Metamask not found");
+      // Simulate connection for testing if no provider is present
+      this.telemetry.walletAddress = '0x' + Math.random().toString(16).slice(2, 10) + '...' + Math.random().toString(16).slice(2, 6);
+      this.notify();
+    }
   }
 }
 

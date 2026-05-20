@@ -51,4 +51,7 @@ export interface TelemetryState {
   yieldCurve: YieldPoint[];
   quantumProfile: QuantumMetric[];
   agents: Agent[];
+  architectBalance: number;
+  blockHeight: number;
+  walletAddress?: string;
 }

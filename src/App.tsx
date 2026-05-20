@@ -17,7 +17,10 @@ import {
   Info,
   Lock,
   ArrowRight,
-  Flame
+  Flame,
+  Wallet,
+  CheckCircle2,
+  Clock
 } from 'lucide-react';
 import { 
   ResponsiveContainer,
@@ -76,9 +79,29 @@ export default function App() {
             <span className="text-[#FF4E00] text-[10px] font-mono opacity-80 bg-[#FF4E00]/10 px-1 border border-[#FF4E00]/20">PUBLIC_PORTAL</span>
           </h1>
         </div>
-        <div className="flex flex-col items-end">
-          <span className="text-[9px] font-mono text-[#FF4E00] opacity-70 tracking-[0.2em]">MESH_COORDINATES</span>
-          <span className="text-[11px] font-mono text-zinc-400">flameGPT.net // PROXY_V1</span>
+
+        <div className="flex items-center gap-6">
+          <button 
+            onClick={() => simulator.connectWallet()}
+            className={cn(
+              "flex items-center gap-2 px-4 py-2 rounded-sm border transition-all text-xs font-bold uppercase tracking-wider group",
+              state.telemetry.walletAddress 
+                ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-500 hover:bg-emerald-500/10" 
+                : "border-[#FF4E00]/30 bg-[#FF4E00]/5 text-[#FF4E00] hover:bg-[#FF4E00]/10 active:scale-95"
+            )}
+          >
+            <Wallet size={14} className={cn("transition-transform", !state.telemetry.walletAddress && "group-hover:rotate-12")} />
+            {state.telemetry.walletAddress ? (
+              <span className="font-mono">{truncateHash(state.telemetry.walletAddress, 6)}</span>
+            ) : (
+              <span>Connect Wallet</span>
+            )}
+          </button>
+          
+          <div className="flex flex-col items-end">
+            <span className="text-[9px] font-mono text-[#FF4E00] opacity-70 tracking-[0.2em]">MESH_COORDINATES</span>
+            <span className="text-[11px] font-mono text-zinc-400">flameGPT.net // PROXY_V1</span>
+          </div>
         </div>
       </header>
 
@@ -94,9 +117,10 @@ export default function App() {
             </div>
             
             <div className="space-y-4 text-[11px] leading-relaxed text-zinc-400 font-mono">
-              <p>1. Connect your device to a power source to initiate <span className="text-zinc-200">PPoT</span>.</p>
-              <p>2. The <span className="text-zinc-200">Deflationary Yield Model</span> prioritizes early reality proofs.</p>
-              <p>3. <span className="text-zinc-200">Quantum Profile</span> metrics ground the mesh in shared physiology.</p>
+              <p>1. Connect device via <span className="text-zinc-200">USB-C</span> to initiate high-throughput PPoT.</p>
+              <p>2. <span className="text-zinc-200">TFHE Torus</span> encryption active for all shard anchors.</p>
+              <p>3. <span className="text-zinc-200">10% Sovereign Tax</span> routed to Architect Ledger for mesh expansion.</p>
+              <p>4. <span className="text-zinc-200">Dillithium Root</span> signatures verify all consensus events.</p>
             </div>
           </div>
 
@@ -120,16 +144,40 @@ export default function App() {
             </div>
           </div>
 
-          <div className="mt-auto">
-            <h2 className="text-xs font-bold uppercase tracking-widest text-[#9CA3AF] mb-4">Discovery Status</h2>
-            <div className="grid grid-cols-2 gap-2 text-[10px] font-mono mb-4 text-zinc-500">
-               <div className="bg-black/50 p-2 border border-[#30363D]/50 text-center">
-                  SCAN: <span className={state.isScanning ? "text-emerald-500" : "text-zinc-500"}>{state.isScanning ? "ON" : "OFF"}</span>
-               </div>
-               <div className="bg-black/50 p-2 border border-[#30363D]/50 text-center">
-                  NODES: <span className="text-zinc-300">{state.peers.length}</span>
-               </div>
+            {/* Hardware Interconnect & Discovery */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-2">
+                <ShieldCheck size={16} className="text-emerald-500" />
+                <h2 className="text-xs font-bold uppercase tracking-widest text-[#9CA3AF]">Hardware Interconnect</h2>
+              </div>
+              <div className="bg-black/40 border border-[#30363D] p-3 space-y-2">
+                <div className="flex justify-between items-center">
+                   <div className="flex items-center gap-2">
+                      <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 shadow-[0_0_5px_#10B981]" />
+                      <span className="text-[10px] text-zinc-300 uppercase">Tesla Model 3/Y Hub</span>
+                   </div>
+                   <span className="text-[9px] font-mono text-zinc-500">CONNECTED</span>
+                </div>
+                <div className="flex justify-between items-center">
+                   <div className="flex items-center gap-2">
+                      <div className={cn("w-1.5 h-1.5 rounded-full", state.telemetry.charging ? "bg-emerald-500 shadow-[0_0_5px_#10B981]" : "bg-red-500 animate-pulse")} />
+                      <span className="text-[10px] text-zinc-300 uppercase">iOS USB-C Link</span>
+                   </div>
+                   <span className="text-[9px] font-mono text-zinc-500 uppercase">{state.telemetry.charging ? "Active Mining" : "Standby"}</span>
+                </div>
+              </div>
             </div>
+
+            <div className="mt-auto">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[#9CA3AF] mb-4">Discovery Status</h2>
+              <div className="grid grid-cols-2 gap-2 text-[10px] font-mono mb-4 text-zinc-500">
+                 <div className="bg-black/50 p-2 border border-[#30363D]/50 text-center">
+                    SCAN: <span className={state.isScanning ? "text-emerald-500" : "text-zinc-500"}>{state.isScanning ? "ON" : "OFF"}</span>
+                 </div>
+                 <div className="bg-black/50 p-2 border border-[#30363D]/50 text-center">
+                    NODES: <span className="text-zinc-300">{state.peers.length}</span>
+                 </div>
+              </div>
 
             <div className="grid grid-cols-2 gap-2">
               <button 
@@ -182,19 +230,50 @@ export default function App() {
               <p className="text-sm font-mono text-zinc-400 tracking-tight">{welcomeMessage}</p>
             </div>
             
-            {/* Agent Consensus Visualizer */}
-            <div className="flex gap-4">
-              {state.telemetry.agents.map((agent, i) => (
-                <div key={i} className="flex flex-col items-center gap-1">
-                  <div className={cn(
-                    "w-10 h-10 rounded-sm border flex items-center justify-center transition-all bg-black",
-                    "border-[#1F2937]"
-                  )}>
-                    <Cpu size={18} className="text-zinc-500" />
-                  </div>
-                  <span className="text-[8px] font-bold text-zinc-500 uppercase text-center block w-14 truncate">{agent.name}</span>
+            {/* Architect Ledger & Consensus */}
+            <div className="flex gap-4 items-center">
+              <div className="flex flex-col items-end border-r border-[#374151] pr-4">
+                <div className="flex items-center gap-1.5 mb-1">
+                  <Lock size={10} className="text-zinc-600" />
+                  <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-[0.2em]">TFHE Sovereign Ledger</span>
                 </div>
-              ))}
+                <div className="flex items-center gap-2">
+                  <span className="text-zinc-500 font-mono text-[10px]">#0xArch...</span>
+                  <span className="text-emerald-500 font-mono text-xs font-bold tabular-nums">
+                    {state.telemetry.architectBalance.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })} FLM
+                  </span>
+                  <div className="px-1 py-0.5 bg-emerald-500/10 border border-emerald-500/20 rounded-xs text-[8px] text-emerald-500 font-bold uppercase flex items-center gap-1">
+                    <ShieldCheck size={8} />
+                    Architect
+                  </div>
+                </div>
+              </div>
+              <div className="flex gap-4">
+                {state.telemetry.agents.map((agent, i) => (
+                  <div key={i} className="flex flex-col items-center gap-1 group">
+                    <div className={cn(
+                      "w-10 h-10 rounded-sm border flex items-center justify-center transition-all bg-black relative",
+                      agent.status === 'VOTING' ? "border-amber-500/50 shadow-[0_0_10px_rgba(245,158,11,0.2)]" :
+                      agent.status === 'COMMITTED' ? "border-emerald-500/50 shadow-[0_0_10px_rgba(16,185,129,0.2)]" :
+                      "border-[#1F2937]"
+                    )}>
+                      {agent.status === 'VOTING' ? (
+                        <div className="absolute inset-0 flex items-center justify-center">
+                           <Clock size={16} className="text-amber-500 animate-spin" />
+                        </div>
+                      ) : agent.status === 'COMMITTED' ? (
+                        <CheckCircle2 size={18} className="text-emerald-500" />
+                      ) : (
+                        <Cpu size={18} className="text-zinc-500 opacity-40" />
+                      )}
+                    </div>
+                    <span className={cn(
+                      "text-[8px] font-bold uppercase text-center block w-14 truncate transition-colors",
+                      agent.status === 'COMMITTED' ? "text-emerald-500" : "text-zinc-500"
+                    )}>{agent.name}</span>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 
@@ -302,6 +381,7 @@ export default function App() {
             <span className="text-[#FF4E00]">[SANCTUARY_MODE: ONLINE]</span>
           </div>
           <span className="hidden sm:inline">NODES: {state.peers.length}</span>
+          <span className="hidden sm:inline">BLOCK_HT: {state.telemetry.blockHeight}</span>
           <span className="hidden sm:inline">BANDWIDTH: 1.2 GB/S</span>
           <span className="hidden lg:inline text-zinc-700">COORD: {new Date().toISOString().slice(0, 19)}</span>
         </div>
