@@ -16,7 +16,8 @@ import {
   Terminal,
   Info,
   Lock,
-  ArrowRight
+  ArrowRight,
+  Flame
 } from 'lucide-react';
 import { 
   ResponsiveContainer,
@@ -84,7 +85,7 @@ export default function App() {
       {/* Main Workspace */}
       <main className="flex-1 grid grid-cols-12 gap-px bg-[#1F2937] overflow-hidden">
         
-        {/* Left Sidebar: Instructions & Info */}
+        {/* Left Sidebar: Instructions & Quantum Profile */}
         <section className="col-span-3 bg-[#0D0F12] p-6 flex flex-col gap-6 overflow-hidden border-r border-[#1F2937]">
           <div className="space-y-4">
             <div className="flex items-center gap-2">
@@ -93,113 +94,160 @@ export default function App() {
             </div>
             
             <div className="space-y-4 text-[11px] leading-relaxed text-zinc-400 font-mono">
-              <p>1. Connect your device via <span className="text-zinc-200">USB-C</span> or equivalent to a high-throughput power source.</p>
-              <p>2. Keep this Sanctuary portal open. The node uses <span className="text-zinc-200">Physical Proof of Throughput (PPoT)</span> via telemetry jitter.</p>
-              <p>3. Every 10 seconds, an <span className="text-zinc-200">Energy Shard</span> is hashed and anchored to the Genesis Block.</p>
-              <p>4. Your charging telemetry directly contributes to the global mesh consensus.</p>
+              <p>1. Connect your device to a power source to initiate <span className="text-zinc-200">PPoT</span>.</p>
+              <p>2. The <span className="text-zinc-200">Deflationary Yield Model</span> prioritizes early reality proofs.</p>
+              <p>3. <span className="text-zinc-200">Quantum Profile</span> metrics ground the mesh in shared physiology.</p>
             </div>
+          </div>
 
-            <div className="p-4 bg-orange-500/5 border border-orange-500/20 rounded-sm">
-              <div className="flex items-center gap-2 mb-2">
-                <Lock size={12} className="text-orange-500" />
-                <span className="text-[10px] font-bold text-orange-500 uppercase tracking-tighter">Cryptographic Anchor</span>
-              </div>
-              <div className="text-[9px] break-all font-mono opacity-60">
-                {GENESIS_HASH}
-              </div>
+          <div className="space-y-4">
+             <div className="flex items-center gap-2">
+              <Cpu size={16} className="text-cyan-500" />
+              <h2 className="text-xs font-bold uppercase tracking-widest text-[#9CA3AF]">Quantum Profile</h2>
+            </div>
+            <div className="grid grid-cols-1 gap-3">
+              {state.telemetry.quantumProfile.map((q, i) => (
+                <div key={i} className="bg-black/40 p-3 border border-[#30363D] rounded-sm">
+                  <div className="flex justify-between items-center mb-1">
+                    <span className="text-[10px] text-zinc-500 uppercase">{q.label}</span>
+                    <span className="text-[10px] text-emerald-500 font-mono font-bold">+{q.trend}%</span>
+                  </div>
+                  <div className="text-lg font-mono text-zinc-100 font-black">
+                    {q.value} <span className="text-[10px] text-zinc-500 font-normal uppercase">{q.unit}</span>
+                  </div>
+                </div>
+              ))}
             </div>
           </div>
 
           <div className="mt-auto">
             <h2 className="text-xs font-bold uppercase tracking-widest text-[#9CA3AF] mb-4">Discovery Status</h2>
             <div className="grid grid-cols-2 gap-2 text-[10px] font-mono mb-4 text-zinc-500">
-               <div className="bg-black/50 p-2 border border-[#30363D]/50">
+               <div className="bg-black/50 p-2 border border-[#30363D]/50 text-center">
                   SCAN: <span className={state.isScanning ? "text-emerald-500" : "text-zinc-500"}>{state.isScanning ? "ON" : "OFF"}</span>
                </div>
-               <div className="bg-black/50 p-2 border border-[#30363D]/50 text-right">
+               <div className="bg-black/50 p-2 border border-[#30363D]/50 text-center">
                   NODES: <span className="text-zinc-300">{state.peers.length}</span>
                </div>
             </div>
-            <button 
-              onClick={() => simulator.toggleScanning()}
-              className="w-full py-2 bg-[#1F2937] hover:bg-[#2D3748] text-white text-[10px] uppercase font-bold tracking-widest transition-colors flex items-center justify-center gap-2 border border-[#374151]"
-            >
-              <RefreshCcw size={12} />
-              Refresh Mesh
-            </button>
+
+            <div className="grid grid-cols-2 gap-2">
+              <button 
+                onClick={() => simulator.toggleScanning()}
+                className={cn(
+                  "flex items-center justify-center gap-2 py-2 px-3 rounded-sm text-[9px] font-bold uppercase transition-all border",
+                  state.isScanning 
+                    ? "bg-red-500/5 text-red-500 border-red-500/20 hover:bg-red-500/10 active:scale-95" 
+                    : "bg-emerald-500/5 text-emerald-500 border-emerald-500/20 hover:bg-emerald-500/10 active:scale-95"
+                )}
+              >
+                {state.isScanning ? (
+                  <>
+                    <Square size={10} fill="currentColor" />
+                    <span>Stop BLE</span>
+                  </>
+                ) : (
+                  <>
+                    <Play size={10} fill="currentColor" />
+                    <span>Start BLE</span>
+                  </>
+                )}
+              </button>
+              <button 
+                onClick={() => simulator.refreshScan()}
+                className="flex items-center justify-center gap-2 py-2 px-3 rounded-sm bg-zinc-800/40 text-zinc-400 border border-zinc-700/50 text-[9px] font-bold uppercase hover:bg-zinc-800 hover:text-white transition-all active:scale-95"
+              >
+                <RefreshCcw size={10} />
+                <span>Refresh</span>
+              </button>
+            </div>
           </div>
         </section>
 
-        {/* Center: Live Telemetry & Terminal */}
+        {/* Center: Live Telemetry, Yield & Terminal */}
         <section className="col-span-9 bg-[#0A0B0D] flex flex-col relative overflow-hidden">
           {/* Welcome Banner */}
-          <div className="p-6 bg-[#111827]/50 border-b border-[#1F2937]">
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-lg font-black text-white uppercase tracking-tighter italic">Welcome, Sentinel</h2>
-              <div className={cn(
-                "px-2 py-0.5 rounded-sm text-[10px] font-bold border flex items-center gap-1.5",
-                state.telemetry.charging ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-500" : "border-red-500/30 bg-red-500/5 text-red-500"
-              )}>
-                <Zap size={10} fill={state.telemetry.charging ? "currentColor" : "none"} />
-                {state.telemetry.charging ? "SOURCE_LOCKED" : "SOURCE_MISSING"}
+          <div className="p-6 bg-[#111827]/50 border-b border-[#1F2937] flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2 mb-2">
+                <h2 className="text-lg font-black text-white uppercase tracking-tighter italic">Welcome, Sentinel</h2>
+                <div className={cn(
+                  "px-2 py-0.5 rounded-sm text-[10px] font-bold border flex items-center gap-1.5",
+                  state.telemetry.charging ? "border-emerald-500/30 bg-emerald-500/5 text-emerald-500" : "border-red-500/30 bg-red-500/5 text-red-500"
+                )}>
+                  <Zap size={10} fill={state.telemetry.charging ? "currentColor" : "none"} />
+                  {state.telemetry.charging ? "SOURCE_LOCKED" : "SOURCE_MISSING"}
+                </div>
               </div>
+              <p className="text-sm font-mono text-zinc-400 tracking-tight">{welcomeMessage}</p>
             </div>
-            <p className="text-sm font-mono text-zinc-400 tracking-tight animate-pulse">{welcomeMessage}</p>
+            
+            {/* Agent Consensus Visualizer */}
+            <div className="flex gap-4">
+              {state.telemetry.agents.map((agent, i) => (
+                <div key={i} className="flex flex-col items-center gap-1">
+                  <div className={cn(
+                    "w-10 h-10 rounded-sm border flex items-center justify-center transition-all bg-black",
+                    "border-[#1F2937]"
+                  )}>
+                    <Cpu size={18} className="text-zinc-500" />
+                  </div>
+                  <span className="text-[8px] font-bold text-zinc-500 uppercase text-center block w-14 truncate">{agent.name}</span>
+                </div>
+              ))}
+            </div>
           </div>
 
-          <div className="flex-1 grid grid-cols-2 gap-px bg-[#1F2937] overflow-hidden">
-             {/* Chart Section */}
-             <div className="bg-[#0A0B0D] p-6 flex flex-col">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="text-xs font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
-                    <ActivityIcon size={14} className="text-[#FF4E00]" />
-                    Wattage Jitter Mapping
+          <div className="flex-1 grid grid-cols-5 gap-px bg-[#1F2937] overflow-hidden">
+             {/* Charts Section */}
+             <div className="col-span-3 bg-[#0A0B0D] flex flex-col divide-y divide-[#1F2937]">
+                {/* Wattage Jitter */}
+                <div className="flex-1 p-6 flex flex-col min-h-0">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                      <ActivityIcon size={14} className="text-[#FF4E00]" />
+                      Wattage Jitter Mapping
+                    </div>
+                    <div className="text-xl font-mono font-black text-white tabular-nums tracking-tighter">
+                      {state.telemetry.wattage.toFixed(2)}<span className="text-[10px] ml-1 opacity-50 uppercase tracking-normal">kW</span>
+                    </div>
                   </div>
-                  <div className="text-xl font-mono font-black text-white tabular-nums tracking-tighter">
-                    {state.telemetry.wattage.toFixed(2)}<span className="text-[10px] ml-1 opacity-50 uppercase tracking-normal">kW</span>
-                  </div>
-                </div>
-                
-                <div className="flex-1 bg-[#0D1117] border border-[#30363D] relative overflow-hidden group">
-                  <div className="absolute inset-0 grid-bg opacity-20 pointer-events-none" />
-                  <ResponsiveContainer width="100%" height="100%">
-                    <AreaChart data={state.energyHistory} margin={{ top: 20, right: 0, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="sanctuaryWatts" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#FF4E00" stopOpacity={0.4}/>
-                          <stop offset="95%" stopColor="#FF4E00" stopOpacity={0}/>
-                        </linearGradient>
-                      </defs>
-                      <Area 
-                        type="step" 
-                        dataKey="watts" 
-                        stroke="#FF4E00" 
-                        strokeWidth={1} 
-                        fill="url(#sanctuaryWatts)"
-                        isAnimationActive={false}
-                      />
-                    </AreaChart>
-                  </ResponsiveContainer>
-                  <div className="absolute top-4 right-4 text-[9px] font-mono text-emerald-500/60 flex items-center gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping" />
-                    REAL_TIME_STREAM
+                  <div className="flex-1 bg-[#0D1117] border border-[#30363D] relative overflow-hidden">
+                    <div className="absolute inset-0 grid-bg opacity-10" />
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={state.energyHistory} margin={{ top: 10, right: 0, left: 0, bottom: 0 }}>
+                        <Area type="step" dataKey="watts" stroke="#FF4E00" strokeWidth={1} fill="#FF4E001a" isAnimationActive={false} />
+                      </AreaChart>
+                    </ResponsiveContainer>
                   </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4 mt-6">
-                   <div className="border-l-2 border-cyan-500 pl-3">
-                      <div className="text-[9px] text-zinc-500 uppercase font-bold tracking-widest">Battery Level</div>
-                      <div className="text-xl font-mono text-zinc-200">{(state.telemetry.level * 100).toFixed(0)}%</div>
-                   </div>
-                   <div className="border-l-2 border-orange-500 pl-3">
-                      <div className="text-[9px] text-zinc-500 uppercase font-bold tracking-widest">Derived Jitter</div>
-                      <div className="text-xl font-mono text-zinc-200">±{state.telemetry.jitter.toFixed(3)}</div>
-                   </div>
+                {/* Deflationary Yield Curve */}
+                <div className="h-48 p-6 flex flex-col bg-black/20">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-zinc-500 flex items-center gap-2">
+                      <Flame size={14} className="text-emerald-500" />
+                      Deflationary Yield Curve
+                    </div>
+                  </div>
+                  <div className="flex-1 bg-black/40 border border-[#30363D]/40 relative overflow-hidden">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <AreaChart data={state.telemetry.yieldCurve}>
+                        <defs>
+                          <linearGradient id="yieldGrad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="5%" stopColor="#10B981" stopOpacity={0.3}/>
+                            <stop offset="95%" stopColor="#10B981" stopOpacity={0}/>
+                          </linearGradient>
+                        </defs>
+                        <Area type="monotone" dataKey="yield" stroke="#10B981" fill="url(#yieldGrad)" isAnimationActive={false} />
+                      </AreaChart>
+                    </ResponsiveContainer>
+                  </div>
                 </div>
              </div>
 
              {/* Terminal Section */}
-             <div className="bg-[#0D0F12] flex flex-col overflow-hidden">
+             <div className="col-span-2 bg-[#0D0F12] flex flex-col overflow-hidden">
                 <div className="px-6 py-4 border-b border-[#1F2937] flex items-center justify-between bg-black/20">
                    <div className="flex items-center gap-2">
                       <Terminal size={14} className="text-[#FF4E00]" />

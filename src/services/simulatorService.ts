@@ -12,12 +12,31 @@ class FlamechainSimulator {
     charging: false,
     level: 1,
     wattage: 0,
-    jitter: 0
+    jitter: 0,
+    yieldCurve: [],
+    quantumProfile: [
+      { label: 'Protein Qubits', value: '1.2e12', unit: 'EXP', trend: 5.4 },
+      { label: 'Neural Tethers', value: '880', unit: 'mV', trend: 2.1 },
+      { label: 'Dyson H-Flux', value: '0.94', unit: 'FHE', trend: 0.1 }
+    ],
+    agents: [
+      { name: 'Architect', role: 'State Expander', status: 'IDLE' },
+      { name: 'Oracle', role: 'Entropy Verifier', status: 'IDLE' },
+      { name: 'Flamebot', role: 'Sentinel Consensus', status: 'IDLE' }
+    ]
   };
 
   constructor() {
+    this.generateYieldCurve();
     this.initBatteryTelemetry();
     this.startSimulation();
+  }
+
+  private generateYieldCurve() {
+    this.telemetry.yieldCurve = Array.from({ length: 20 }, (_, i) => ({
+      block: 7292 + i,
+      yield: 100 * Math.pow(0.95, i)
+    }));
   }
 
   private async initBatteryTelemetry() {
