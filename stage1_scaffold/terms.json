@@ -1,0 +1,32 @@
+{
+  "QOHEFB": {
+    "definition": "Quantum-Overwatch Eternal Flame Blockchain; treated here as a symbolic root-of-trust namespace for signed model artifacts.",
+    "datatype": "ledger_root",
+    "units": "N/A"
+  },
+  "Somatic Handshake": {
+    "definition": "Privacy-preserving liveness and consent gate using biometric-derived commitments rather than raw biometric storage.",
+    "datatype": "auth_protocol",
+    "units": "hash"
+  },
+  "Ternary Weight Map": {
+    "definition": "Quantized model parameter representation using {-1, 0, +1} with scale factors per tensor block.",
+    "datatype": "model_quantization",
+    "units": "trit"
+  },
+  "Sentinel LoRA": {
+    "definition": "Public agent shard focused on monitoring, rejection logic, and safe operational status summaries.",
+    "datatype": "adapter_shard",
+    "units": "rank"
+  },
+  "Alchemist LoRA": {
+    "definition": "Public agent shard focused on transformation, synthesis, and code/document scaffolding.",
+    "datatype": "adapter_shard",
+    "units": "rank"
+  },
+  "Oracle LoRA": {
+    "definition": "Public agent shard focused on retrieval, citation, summarization, and uncertainty calibration.",
+    "datatype": "adapter_shard",
+    "units": "rank"
+  }
+}
