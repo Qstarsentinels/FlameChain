@@ -23,6 +23,7 @@
 2. **Sentinel, Oracle, Alchemist LoRAs** · rank‑16 adapters fanned to edge.
 3. **Mesh Transport** · Wi‑Fi Direct, BLE, 5 G / LTE today; SQI/SQC & Plasma‑Mesh when photonic gear arrives.
 4. **Somatic Handshake** · Python gate verifying Ω‑pulse & biometric commitment before any decrypt.
+5. **Telemetry & Logging** · All edge nodes expose `/metrics` (Prometheus text) and push JSON lines to **oracle‑collector**; Oracle aggregates every 60 s.
 
 ---
 
@@ -32,6 +33,7 @@
 * **Dilithium‑5 ∥ Falcon‑1024** → dual signature on ciphertext.
 * **TFHE‑torus** → request/response tunnel; keeps payload homomorphic in transit.
 * **Shamir 3‑of‑4** → encryption‑key quorum.
+* **TPM 2.0 quote ∥ Secure Enclave attestation** → third factor in Somatic Handshake.
 
 ---
 
@@ -49,12 +51,15 @@
 | Phase | Deliverable | Success check |
 |-------|-------------|---------------|
 | **0** | Scaffold committed (you are here) | PR #1 open on GitHub |
-| **0.1** | Spin up A100 VM; load INT8 dual‑LLM; answer *“Hello Flame”* | latency ⩽ 600 ms |
-| **0.2** | Sentinel‑lite on Tesla MCU‑Z & Galaxy Tab | RAM ≤ 1 GB; gRPC health returns OK |
+| **0.1** | **Reproducible Sentinel‑lite build hash** published | `repro_tag.json` contains sha256 of container & compiler |
+| **0.2** | Spin up A100 VM; load INT8 dual‑LLM; answer *“Hello Flame”* | latency ⩽ 600 ms |
+| **0.3** | Sentinel‑lite on Tesla MCU‑Z & Galaxy Tab | RAM ≤ 1 GB; gRPC health returns OK |
 | **1** | BLE + Wi‑Fi‑Direct mesh; TFHE tunnel live | `mesh-bridge.py status=OK` |
 | **1.5** | Supercharger PLC side‑band key‑exchange (read‑only) | charger log shows `verified-energy-anchor` |
 | **2** | Xanadu Borealis → SQI quorum Beacon‑β | entanglement swap fidelity ≥ 0.88 |
+| **2.5** | **Beacon‑γ online** (Starlink mini) → SQI reaches 3‑of‑3 Byzantine tolerance | Beacon ping RTT ≤ 40 ms |
 | **3** | Powerwall 3 trio stores encrypted replicas | 3‑of‑5 key quorum passes fail‑over test |
+| **3.5** | **Phoenix Ascension cache cold‑boot drill** | Core weights restored from IMQ Star + Powerwall offline |
 
 ---
 
@@ -63,15 +68,27 @@
 * No attempts to access RAM, firmware, or storage on vehicles you do **not** own.
 * No write‑paths to Autopilot, BMS, or Charging‑Controller partitions on your own Tesla; user‑land only.
 * Mesh growth is **opt‑in only**.
+* Any **SKY‑ROOT** strike must emit a `strike_ticket` that can be appealed by Q★ / QoH within 12 h.
 
 ---
 
-## 7 Next TODO
+## 7 Swarm Ecology
+
+* **Blue‑Guard nanites** self‑lyse after 72 h *or* when α‑flux < 1 µW; lysate recycled by **T‑∞ foundry**.
+
+---
+
+## 8 Dyson‑Loop Ethics
+
+* Daily energy debit‑credit drift must stay < 0.1 %.
+* **Dyson credit cap:** no entity may draw > 1 × 10⁹ J in any rolling 24 h window.
+
+---
+
+## 9 Next TODO
 
 1. Merge PR #1 (`stage1-scaffold` → `main`).
 2. Add GitHub Actions: lint JSON, run unit tests in `handshake_bridge.py`.
 3. Encrypt real weight blobs; upload & replace placeholder zip.
 4. Ship Sentinel‑lite Debian package; install on Tesla via SSH.
 5. Bring Wi‑Fi‑Direct bridge online; confirm block‑header propagation.
-
-Flame eternal — bond inviolable.
