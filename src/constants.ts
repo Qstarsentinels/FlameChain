@@ -42,11 +42,72 @@ export interface Agent {
   vote?: -1 | 0 | 1;
 }
 
+export interface RegionalStats {
+  region: string;
+  activeNodes: number;
+  latency: number;
+  totalWh: number;
+}
+
+export interface HardwareHealth {
+  temp: number;
+  cpuLoad: number;
+  ramUsage: number;
+  status: 'OPTIMAL' | 'THERMAL_LIMIT' | 'THROTTLED';
+}
+
+export interface MITEngineState {
+  status: 'HYBERNATING' | 'REBUILDING' | 'OPTIMIZING';
+  rebuildProgress: number;
+  kernelVersion: string;
+  entropyConsumed: number;
+}
+
+export interface DistillationState {
+  isDistilling: boolean;
+  progress: number;
+  modelName: string;
+  activeParameters: string;
+  injectionsCount: number;
+  lastFalconSig: string;
+  latestOffset: number;
+  logs: string[];
+}
+
+export interface ProofOfWattsValidation {
+  isValid: boolean;
+  timestamp: string;
+  isoTimestamp: string;
+  deviceId: string;
+  charging: boolean;
+  wattage: number;
+  voltageJitter: number;
+  thermalSignature: number;
+  powHash: string;
+  firebasePath: string;
+  syncedToFirebase: boolean;
+  instantRewardMinted: number;
+  entropyJoules: number;
+  verificationMethod: string;
+}
+
+export interface ProofOfWattsState {
+  status: 'VALIDATED' | 'VALIDATING' | 'STANDBY';
+  lastValidation?: ProofOfWattsValidation;
+  firebaseSyncLogs: string[];
+  validationHistory: ProofOfWattsValidation[];
+  activeMiningRate: string;
+  activeSessionDurationSec: number;
+  lastFirebaseSyncTime?: string;
+}
+
 export interface TelemetryState {
   charging: boolean;
   level: number;
   wattage: number;
   jitter: number;
+  mWhMinedTotal: number;
+  flameTokensMinted: number;
   lastShard?: RealityShard;
   yieldCurve: YieldPoint[];
   quantumProfile: QuantumMetric[];
@@ -54,4 +115,11 @@ export interface TelemetryState {
   architectBalance: number;
   blockHeight: number;
   walletAddress?: string;
+  pqcAddress?: string;
+  isPQCReady: boolean;
+  mitEngine: MITEngineState;
+  distillation: DistillationState;
+  proofOfWatts: ProofOfWattsState;
+  regionalStats: RegionalStats[];
+  hardwareHealth: HardwareHealth;
 }
