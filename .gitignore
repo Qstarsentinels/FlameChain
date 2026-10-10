@@ -1,0 +1,26 @@
+# FlameChain Strict Exclusion Rules
+*.log
+*.lock
+*.pid
+*.tmp
+*.sock
+gateway.log
+watcher.log
+ws_gateway.log
+
+# Binary Models & Neural Weights (>50MB)
+*.pt
+*.pth
+*.onnx
+*.safetensors
+*.gguf
+*.bin
+*.tflite
+*.h5
+
+# Heavy Directories
+downloads/
+models/
+mesh_memory/
+agent_bytecode/
+__pycache__/
