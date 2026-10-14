@@ -1,0 +1,10 @@
+{
+  "genesis_anchor": "0000000000000000000000000000000000000000000000000000000000000000",
+  "node_id": "architect_tab_dfpol_01",
+  "node_status": "ARMED_MMWAVE_ACTIVE",
+  "balance_flame": 5000.0,
+  "cumulated_minted_yield": 0.0,
+  "proof_count": 1,
+  "last_proof_hash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+  "proof_chain": []
+}
