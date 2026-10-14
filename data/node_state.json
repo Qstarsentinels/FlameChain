@@ -1,0 +1,58 @@
+{
+  "genesis_anchor": "0000000000000000000000000000000000000000000000000000000000000000",
+  "node_id": "tab_validator_edge_01",
+  "cumulated_minted_yield": 3.09978488728422,
+  "balance_flame": 103.09978488728422,
+  "total_watt_hours": 0.006157011635421117,
+  "total_ram_mb_seconds": 7989.88380205445,
+  "successful_proofs": 3,
+  "deferred_proofs": 0,
+  "slashed_proofs": 0,
+  "proof_count": 3,
+  "last_proof_hash": "5dbfce67c8b97b5d23ffbad6470d66b6aedb8f72646126f7997bf0c9d3c6b8cd",
+  "last_updated": 1791911026.5653398,
+  "proof_chain": [
+    {
+      "index": 3,
+      "timestamp": 1791911026.5653398,
+      "shard_id": "shard_sync_daemon_tick_000003",
+      "trit": 1,
+      "yield_minted": 1.3694881452459635,
+      "penalty_applied": 0.0,
+      "wh_delta": 0.0028092227803484604,
+      "ram_mb": 630.94140625,
+      "prev_hash": "8cfb6e8d578efe00d577442099c25df5e2907aaeedccddef9d5937f75b81183d",
+      "block_hash": "5dbfce67c8b97b5d23ffbad6470d66b6aedb8f72646126f7997bf0c9d3c6b8cd",
+      "signature": "551fd9d4cbcf7e3dc015640f204fdbebdc9bbc3a582f5d80e7ea364d90f1bde8",
+      "reason": "VALIDATED: Proof bound cleanly (Sum=1)"
+    },
+    {
+      "index": 2,
+      "timestamp": 1791911020.713731,
+      "shard_id": "shard_sync_daemon_tick_000002",
+      "trit": 1,
+      "yield_minted": 1.6065001026402697,
+      "penalty_applied": 0.0,
+      "wh_delta": 0.0033477876033389566,
+      "ram_mb": 630.19140625,
+      "prev_hash": "ef983d8323b87aa2dbe8753df84633dea46c9e7fd18e73473485aa54329a22e3",
+      "block_hash": "8cfb6e8d578efe00d577442099c25df5e2907aaeedccddef9d5937f75b81183d",
+      "signature": "5fa2cf31826c731076d265f7c670f81105247fc486eeba3d2306e007bcb9040e",
+      "reason": "VALIDATED: Proof bound cleanly (Sum=-2)"
+    },
+    {
+      "index": 1,
+      "timestamp": 1791911014.8468263,
+      "shard_id": "shard_sync_daemon_tick_000001",
+      "trit": 1,
+      "yield_minted": 0.12379663939798687,
+      "penalty_applied": 0.0,
+      "wh_delta": 1.2517337004343667e-09,
+      "ram_mb": 633.8359375,
+      "prev_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "block_hash": "ef983d8323b87aa2dbe8753df84633dea46c9e7fd18e73473485aa54329a22e3",
+      "signature": "35e07137cd978ca20a50bb7cae0011854402e10987f83eddaebf6639a146fe4f",
+      "reason": "VALIDATED: Proof bound cleanly (Sum=2)"
+    }
+  ]
+}
